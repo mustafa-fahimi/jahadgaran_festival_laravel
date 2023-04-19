@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('group_data', function (Blueprint $table) {
+        Schema::table('group_data', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->string('group_name');
             $table->string('group_registeration_number');

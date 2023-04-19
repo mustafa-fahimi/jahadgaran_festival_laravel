@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/group-data', [GroupDataController::class, 'store']);
+Route::get('/group-data', [GroupDataController::class, 'index']);
