@@ -34,5 +34,9 @@ class GroupData extends Model
         'is_healthcare',
         'is_economic',
         'is_construction',
+        'phone_number',
+        'current_verify_code',
+        'verify_code_count',
+        'last_ip',
     ];
 }

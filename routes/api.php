@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GroupDataController;
+use App\Http\Controllers\GroupSubmittedWorkController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,3 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/group-data', [GroupDataController::class, 'index']);
+
+Route::post('/submitted-work', [GroupSubmittedWorkController::class, 'store']);

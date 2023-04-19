@@ -28,10 +28,14 @@ class GroupDataController extends Controller
                     code: 403,
                 );
             }
-            $sendSmsResult = $this->_sendVerifySms($request->phone_number, $verifyCode);
+            $sendSmsResult = $this->_sendVerifySms(
+                $request->phone_number,
+                $verifyCode,
+            );
             if ($sendSmsResult->getStatusCode() == 200) {
-                $saveVerifyCodeResult = $this->_saveVerifyCode(
+                $saveVerifyCodeResult = $this->_savePhoneAndVerifyCode(
                     $groupData,
+                    $request->phone_number,
                     $verifyCode,
                     $request->getClientIp(),
                 );
@@ -84,11 +88,13 @@ class GroupDataController extends Controller
         return $sendSmsResponse;
     }
 
-    public function _saveVerifyCode(
+    public function _savePhoneAndVerifyCode(
         GroupData $groupData,
+        string $phoneNumber,
         string $verifyCode,
         string $ip,
     ) {
+        $groupData->phone_number = $phoneNumber;
         $groupData->current_verify_code = $verifyCode;
         $groupData->last_ip = $ip;
         if ($groupData->verify_code_count == null) {
