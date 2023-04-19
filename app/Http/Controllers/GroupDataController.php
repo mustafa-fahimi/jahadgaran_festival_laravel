@@ -35,7 +35,10 @@ class GroupDataController extends Controller
                     $verifyCode,
                     $request->getClientIp(),
                 );
-                return $this->success($groupData->fresh(), message: 'پیامک کد تایید ارسال شد' . $saveVerifyCodeResult);
+                return $this->success(
+                    $groupData->fresh(),
+                    message: 'پیامک کد تایید ارسال شد' . $saveVerifyCodeResult,
+                );
             } else {
                 // Sending SMS failed
                 return $this->error(
@@ -45,7 +48,11 @@ class GroupDataController extends Controller
                 );
             }
         } else {
-            return $this->success(null, message: 'کد گروه با کدملی مسئول گروه همخوانی ندارد');
+            return $this->error(
+                null,
+                message: 'کد گروه با کدملی مسئول گروه همخوانی ندارد',
+                code: 400,
+            );
         }
     }
 
@@ -64,7 +71,7 @@ class GroupDataController extends Controller
             "parameters" => [
                 [
                     "name" => "Code",
-                    "value" => strval(rand(11111, 99999)),
+                    "value" => $verifyCode,
                 ]
             ]
         ];
