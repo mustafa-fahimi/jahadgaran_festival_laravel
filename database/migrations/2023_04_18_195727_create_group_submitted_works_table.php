@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('group_id');
             $table->string('attachment_type');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('file_path');
             $table->foreign('group_id')
                 ->references('id')

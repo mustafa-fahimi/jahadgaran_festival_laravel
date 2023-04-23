@@ -17,4 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/group-data', [GroupDataController::class, 'index']);
 
+Route::get('/atlas-code', [GroupDataController::class, 'getAtlasCode']);
+
 Route::post('/submitted-work', [GroupSubmittedWorkController::class, 'store']);
