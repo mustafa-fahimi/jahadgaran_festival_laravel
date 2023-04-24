@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GroupDataRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,6 @@ class GroupDataRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'group_registeration_number' => ['required', 'string'],
             'group_supervisor_national_code' => ['required', 'string'],
             'phone_number' => ['required', 'string', 'min:11'],
         ];

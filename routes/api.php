@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\GroupDataController;
 use App\Http\Controllers\GroupSubmittedWorkController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/group-data', [GroupDataController::class, 'index']);
+Route::get('/register', [RegisterController::class, 'register']);
 
-Route::get('/atlas-code', [GroupDataController::class, 'getAtlasCode']);
+Route::get('/atlas-code', [RegisterController::class, 'getAtlasCode']);
 
 Route::post('/submitted-work', [GroupSubmittedWorkController::class, 'store']);
