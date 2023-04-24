@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/register', [RegisterController::class, 'register']);
+Route::get('/registerJahadiGroup', [RegisterController::class, 'registerJahadiGroup']);
+Route::get('/registerIndividual', [RegisterController::class, 'registerIndividual']);
+Route::get('/registerGroup', [RegisterController::class, 'registerGroup']);
 
-Route::get('/atlas-code', [RegisterController::class, 'getAtlasCode']);
+Route::get('/atlasCode', [RegisterController::class, 'getAtlasCode']);
 
-Route::post('/submitted-work', [GroupSubmittedWorkController::class, 'store']);
+Route::post('/submittedWork', [GroupSubmittedWorkController::class, 'store']);

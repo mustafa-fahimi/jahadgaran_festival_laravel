@@ -13,40 +13,9 @@ class RegisterController extends Controller
 {
   use HttpResponses;
 
-  public function register(RegisterRequest $request)
+  public function registerJahadiGroup(RegisterRequest $request)
   {
     $request->validated($request->all());
-    $registerType = $request->validated()->register_type;
-    if ($registerType === 'jahadi_group') {
-      return $this->_handleJahadiGroup($request);
-    } else if ($registerType === 'individual') {
-      return $this->_handleIndividual($request);
-    } else if ($registerType === 'group') {
-      return $this->_handleGroups($request);
-    }
-  }
-
-  public function getAtlasCode(GetAtlasCodeRequest $request)
-  {
-    $jahadiGroup = JahadiGroups::where([
-      'group_supervisor_national_code' => $request->group_supervisor_national_code,
-    ])->first();
-    if ($jahadiGroup) {
-      return $this->success(
-        null,
-        message: 'کد اطلس گروه جهادی ' . $jahadiGroup->group_name . ' ' . $jahadiGroup->group_registeration_number . ' می باشد.',
-      );
-    } else {
-      return $this->error(
-        null,
-        message: 'گروه جهادی یافت نشد',
-        code: 400,
-      );
-    }
-  }
-
-  private function _handleJahadiGroup(RegisterRequest $request)
-  {
     $jahadiGroup = JahadiGroups::where(
       'group_supervisor_national_code',
       '=',
@@ -86,8 +55,9 @@ class RegisterController extends Controller
     }
   }
 
-  private function _handleIndividual(RegisterRequest $request)
+  public function registerIndividual(RegisterRequest $request)
   {
+    $request->validated($request->all());
     $individual = Individuals::where(
       'national_code',
       '=',
@@ -107,7 +77,7 @@ class RegisterController extends Controller
       if ($sendSmsResult->getStatusCode() == 200) {
         $this->_updateIndividualVerifyCode($individual, $request, $verifyCode);
         return $this->success(
-          null,
+          $individual->fresh(),
           message: 'پیامک کد تایید ارسال شد',
         );
       } else {
@@ -139,8 +109,29 @@ class RegisterController extends Controller
     }
   }
 
-  private function _handleGroups(RegisterRequest $request)
+  public function registerGroup(RegisterRequest $request)
   {
+    $request->validated($request->all());
+    
+  }
+
+  public function getAtlasCode(GetAtlasCodeRequest $request)
+  {
+    $jahadiGroup = JahadiGroups::where([
+      'group_supervisor_national_code' => $request->group_supervisor_national_code,
+    ])->first();
+    if ($jahadiGroup) {
+      return $this->success(
+        null,
+        message: 'کد اطلس گروه جهادی ' . $jahadiGroup->group_name . ' ' . $jahadiGroup->group_registeration_number . ' می باشد.',
+      );
+    } else {
+      return $this->error(
+        null,
+        message: 'گروه جهادی یافت نشد',
+        code: 400,
+      );
+    }
   }
 
   private function _sendVerifySms(string $phoneNumber, string $verifyCode)
@@ -177,9 +168,9 @@ class RegisterController extends Controller
     string $verifyCode,
   ) {
     return $jahadiGroup->update([
-      'phone_number' => $request->phoneNumber,
+      'phone_number' => $request->phone_number,
       'verify_code_count' => $jahadiGroup->verify_code_count == null ?
-        1 : $jahadiGroup->verify_code_count + 1,
+      1 : $jahadiGroup->verify_code_count + 1,
       'current_verify_code' => $verifyCode,
       'last_ip' => $request->getClientIp(),
     ]);
@@ -191,9 +182,9 @@ class RegisterController extends Controller
     string $verifyCode,
   ) {
     return $individual->update([
-      'phone_number' => $request->phoneNumber,
+      'phone_number' => $request->phone_number,
       'verify_code_count' => $individual->verify_code_count == null ?
-        1 : $individual->verify_code_count + 1,
+      1 : $individual->verify_code_count + 1,
       'current_verify_code' => $verifyCode,
       'last_ip' => $request->getClientIp(),
     ]);
@@ -204,8 +195,11 @@ class RegisterController extends Controller
     string $verifyCode,
   ) {
     return Individuals::create([
+      'fname' => '',
+      'lname' => '',
+      'city' => '',
       'national_code' => $request->national_code,
-      'phone_number' => $request->phoneNumber,
+      'phone_number' => $request->phone_number,
       'verify_code_count' => 1,
       'current_verify_code' => $verifyCode,
       'last_ip' => $request->getClientIp(),
