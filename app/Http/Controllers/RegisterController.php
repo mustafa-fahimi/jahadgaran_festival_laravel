@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GetAtlasCodeRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Individuals;
 use App\Models\JahadiGroups;
 use App\Traits\HttpResponses;
 use GuzzleHttp\Client;
@@ -15,14 +16,13 @@ class RegisterController extends Controller
   public function register(RegisterRequest $request)
   {
     $request->validated($request->all());
-    $jahadiGroup = JahadiGroups::where(
-      'group_supervisor_national_code',
-      '=',
-      $request->group_supervisor_national_code,
-    )->first();
-
-    if ($jahadiGroup) {
-      return $this->_handleJahadiGroup($request, $jahadiGroup);
+    $registerType = $request->validated()->register_type;
+    if ($registerType === 'jahadi_group') {
+      return $this->_handleJahadiGroup($request);
+    } else if ($registerType === 'individual') {
+      return $this->_handleIndividual($request);
+    } else if ($registerType === 'group') {
+      return $this->_handleGroups($request);
     }
   }
 
@@ -33,7 +33,7 @@ class RegisterController extends Controller
     ])->first();
     if ($jahadiGroup) {
       return $this->success(
-        [$jahadiGroup->group_name, $jahadiGroup->group_registeration_number],
+        null,
         message: 'کد اطلس گروه جهادی ' . $jahadiGroup->group_name . ' ' . $jahadiGroup->group_registeration_number . ' می باشد.',
       );
     } else {
@@ -45,26 +45,33 @@ class RegisterController extends Controller
     }
   }
 
-  private function _handleJahadiGroup(
-    RegisterRequest $request,
-    JahadiGroups $jahadiGroup,
-  ) {
-    $verifyCode = strval(rand(11111, 99999));
-    if ($jahadiGroup->verify_code_count >= 3) {
+  private function _handleJahadiGroup(RegisterRequest $request)
+  {
+    $jahadiGroup = JahadiGroups::where(
+      'group_supervisor_national_code',
+      '=',
+      $request->national_code,
+    )->first();
+    if (!$jahadiGroup) {
+      return $this->error(
+        null,
+        message: 'گروه جهادی یافت نشد',
+        code: 400,
+      );
+    } else if ($jahadiGroup->verify_code_count >= 3) {
       return $this->error(
         null,
         message: 'شما بیش از سه مرتبه درخواست پیامک کد تایید کرده اید و دیگر این امکان را با این شماره همراه ندارید',
         code: 403,
       );
     }
-    $sendSmsResult = $this->_sendVerifySms($request->phone_number, $verifyCode);
+    $verifyCode = strval(rand(11111, 99999));
+    $sendSmsResult = $this->_sendVerifySms(
+      $request->phone_number,
+      $verifyCode,
+    );
     if ($sendSmsResult->getStatusCode() == 200) {
-      $this->_savePhoneAndVerifyCode(
-        $jahadiGroup,
-        $request->phone_number,
-        $verifyCode,
-        $request->getClientIp(),
-      );
+      $this->_updateJahadiGroup($jahadiGroup, $request, $verifyCode);
       return $this->success(
         $jahadiGroup->fresh(),
         message: 'پیامک کد تایید ارسال شد',
@@ -79,7 +86,64 @@ class RegisterController extends Controller
     }
   }
 
-  public function _sendVerifySms(string $phoneNumber, string $verifyCode)
+  private function _handleIndividual(RegisterRequest $request)
+  {
+    $individual = Individuals::where(
+      'national_code',
+      '=',
+      $request->national_code,
+    )->first();
+    if ($individual) {
+      // User registered before
+      if ($individual->verify_code_count >= 3) {
+        return $this->error(
+          null,
+          message: 'شما بیش از سه مرتبه درخواست پیامک کد تایید کرده اید و دیگر این امکان را ندارید',
+          code: 403,
+        );
+      }
+      $verifyCode = strval(rand(11111, 99999));
+      $sendSmsResult = $this->_sendVerifySms($request->phone_number, $verifyCode);
+      if ($sendSmsResult->getStatusCode() == 200) {
+        $this->_updateIndividualVerifyCode($individual, $request, $verifyCode);
+        return $this->success(
+          null,
+          message: 'پیامک کد تایید ارسال شد',
+        );
+      } else {
+        // Sending SMS failed
+        return $this->error(
+          null,
+          message: 'خطا در ارسال کد تایید. در زمان دیگری امتحان نمایید',
+          code: $sendSmsResult->getStatusCode(),
+        );
+      }
+    } else {
+      // User registered for the first time
+      $verifyCode = strval(rand(11111, 99999));
+      $sendSmsResult = $this->_sendVerifySms($request->phone_number, $verifyCode);
+      if ($sendSmsResult->getStatusCode() == 200) {
+        $this->_createIndividual($request, $verifyCode);
+        return $this->success(
+          null,
+          message: 'پیامک کد تایید ارسال شد',
+        );
+      } else {
+        // Sending SMS failed
+        return $this->error(
+          null,
+          message: 'خطا در ارسال کد تایید. در زمان دیگری امتحان نمایید',
+          code: $sendSmsResult->getStatusCode(),
+        );
+      }
+    }
+  }
+
+  private function _handleGroups(RegisterRequest $request)
+  {
+  }
+
+  private function _sendVerifySms(string $phoneNumber, string $verifyCode)
   {
     $client = new Client();
 
@@ -107,20 +171,44 @@ class RegisterController extends Controller
     return $sendSmsResponse;
   }
 
-  public function _savePhoneAndVerifyCode(
+  private function _updateJahadiGroup(
     JahadiGroups $jahadiGroup,
-    string $phoneNumber,
+    RegisterRequest $request,
     string $verifyCode,
-    string $ip,
   ) {
-    $jahadiGroup->phone_number = $phoneNumber;
-    $jahadiGroup->current_verify_code = $verifyCode;
-    $jahadiGroup->last_ip = $ip;
-    if ($jahadiGroup->verify_code_count == null) {
-      $jahadiGroup->verify_code_count = 1;
-    } else {
-      $jahadiGroup->verify_code_count = $jahadiGroup->verify_code_count + 1;
-    }
-    return $jahadiGroup->update();
+    return $jahadiGroup->update([
+      'phone_number' => $request->phoneNumber,
+      'verify_code_count' => $jahadiGroup->verify_code_count == null ?
+        1 : $jahadiGroup->verify_code_count + 1,
+      'current_verify_code' => $verifyCode,
+      'last_ip' => $request->getClientIp(),
+    ]);
+  }
+
+  private function _updateIndividualVerifyCode(
+    Individuals $individual,
+    RegisterRequest $request,
+    string $verifyCode,
+  ) {
+    return $individual->update([
+      'phone_number' => $request->phoneNumber,
+      'verify_code_count' => $individual->verify_code_count == null ?
+        1 : $individual->verify_code_count + 1,
+      'current_verify_code' => $verifyCode,
+      'last_ip' => $request->getClientIp(),
+    ]);
+  }
+
+  private function _createIndividual(
+    RegisterRequest $request,
+    string $verifyCode,
+  ) {
+    return Individuals::create([
+      'national_code' => $request->national_code,
+      'phone_number' => $request->phoneNumber,
+      'verify_code_count' => 1,
+      'current_verify_code' => $verifyCode,
+      'last_ip' => $request->getClientIp(),
+    ]);
   }
 }

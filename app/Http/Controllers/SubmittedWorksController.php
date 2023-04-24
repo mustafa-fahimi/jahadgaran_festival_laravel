@@ -3,24 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Traits\HttpResponses;
-use App\Http\Requests\GroupSubmittedWorkRequest;
-use App\Models\GroupData;
-use App\Models\GroupSubmittedWork;
-use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+use App\Http\Requests\SubmittedWorksRequest;
+use App\Models\JahadiGroups;
+use App\Models\SubmittedWorks;
 
-class GroupSubmittedWorkController extends Controller
+class SubmittedWorksController extends Controller
 {
     use HttpResponses;
 
-    public function store(GroupSubmittedWorkRequest $request)
+    public function store(SubmittedWorksRequest $request)
     {
         $request->validated($request->all());
-        $groupData = GroupData::where([
+        $jahadiGroup = JahadiGroups::where([
             'group_registeration_number' => $request->group_registeration_number,
             'group_supervisor_national_code' => $request->group_supervisor_national_code,
         ])->first();
-        if ($groupData->current_verify_code != $request->verify_code) {
+        if ($jahadiGroup->current_verify_code != $request->verify_code) {
             // Wrong verify code
             return $this->error(
                 null,
@@ -30,8 +28,8 @@ class GroupSubmittedWorkController extends Controller
         }
 
         $storedFileName = $this->storeFileAndReturnName($request->file('file'));
-        $isInsertSuccessful = GroupSubmittedWork::create([
-            'group_id' => $groupData->id,
+        $isInsertSuccessful = SubmittedWorks::create([
+            'group_id' => $jahadiGroup->id,
             'attachment_type' => $request->attachment_type,
             'description' => $request->description,
             'file_path' => $storedFileName,

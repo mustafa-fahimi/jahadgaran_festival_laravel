@@ -22,7 +22,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'group_supervisor_national_code' => ['required', 'string'],
+            'register_type' => ['required', 'string', 'in:jahadiGroup,individual,group'],
+            'national_code' => ['required', 'string'],
             'phone_number' => ['required', 'string', 'min:11'],
         ];
     }
