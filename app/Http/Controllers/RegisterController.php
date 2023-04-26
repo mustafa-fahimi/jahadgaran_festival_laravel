@@ -59,6 +59,18 @@ class RegisterController extends Controller
   public function registerIndividual(RegisterRequest $request)
   {
     $request->validated($request->all());
+    $group = Groups::where(
+      'group_supervisor_national_code',
+      '=',
+      $request->national_code,
+    )->first();
+    if ($group) {
+      return $this->error(
+        null,
+        message: 'گروهی با این کد ملی ثبت شده است. لطفا به عنوان گروه وارد شوید',
+        code: 400,
+      );
+    }
     $individual = Individuals::where(
       'national_code',
       '=',
@@ -113,8 +125,20 @@ class RegisterController extends Controller
   public function registerGroup(RegisterRequest $request)
   {
     $request->validated($request->all());
-    $group = Groups::where(
+    $individual = Individuals::where(
       'national_code',
+      '=',
+      $request->national_code,''
+    )->first();
+    if ($individual) {
+      return $this->error(
+        null,
+        message: 'شخص حقیقی با این کد ملی ثبت شده است. لطفا به عنوان شخص حقیقی وارد شوید',
+        code: 400,
+      );
+    }
+    $group = Groups::where(
+      'group_supervisor_national_code',
       '=',
       $request->national_code,
     )->first();

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GroupSubmittedWorksRequest;
 use App\Http\Requests\IndividualSubmittedWorksRequest;
 use App\Models\Individuals;
 use App\Traits\HttpResponses;
 use App\Http\Requests\JahadiGroupSubmittedWorksRequest;
+use App\Models\Groups;
 use App\Models\JahadiGroups;
 use App\Models\SubmittedWorks;
 
@@ -70,7 +72,7 @@ class SubmittedWorksController extends Controller
       );
     }
 
-    $this->_updateIndividualVerifyCode($individual, $request);
+    $this->_updateIndividual($individual, $request);
     $storedFileName = $this->storeFileAndReturnName($request->file('file'));
     $isInsertSuccessful = SubmittedWorks::create([
       'individual_id' => $individual->id,
@@ -92,7 +94,47 @@ class SubmittedWorksController extends Controller
     }
   }
 
-  private function _updateIndividualVerifyCode(
+  public function groupSubmittedWork(
+    GroupSubmittedWorksRequest $request,
+  ) {
+    $request->validated($request->all());
+    $group = Groups::where(
+      'group_supervisor_national_code',
+      '=',
+      $request->group_supervisor_national_code,
+    )->first();
+    if ($group->current_verify_code != $request->verify_code) {
+      // Wrong verify code
+      return $this->error(
+        null,
+        message: 'کد تایید صحیح نمی باشد',
+        code: 403,
+      );
+    }
+
+    $this->_updateGroup($group, $request);
+    $storedFileName = $this->storeFileAndReturnName($request->file('file'));
+    $isInsertSuccessful = SubmittedWorks::create([
+      'group_id' => $group->id,
+      'attachment_type' => $request->attachment_type,
+      'description' => $request->description,
+      'file_path' => $storedFileName,
+    ]);
+    if ($isInsertSuccessful) {
+      return $this->success(
+        null,
+        message: 'اطلاعات با موفقیت ذخیره شد.'
+      );
+    } else {
+      return $this->error(
+        null,
+        message: 'خطا در سرور! مجددا امتحان نمایید',
+        code: 422,
+      );
+    }
+  }
+
+  private function _updateIndividual(
     Individuals $individual,
     IndividualSubmittedWorksRequest $request,
   ) {
@@ -100,6 +142,21 @@ class SubmittedWorksController extends Controller
       'fname' => $request->fname,
       'lname' => $request->lname,
       'city' => $request->city,
+    ]);
+  }
+
+  private function _updateGroup(
+    Groups $group,
+    GroupSubmittedWorksRequest $request,
+  ) {
+    return $group->update([
+      'group_name' => $request->group_name,
+      'established_year' => $request->established_year,
+      'group_license_number' => $request->group_license_number,
+      'group_institution' => $request->group_institution,
+      'group_city' => $request->group_city,
+      'group_supervisor_fname' => $request->group_supervisor_fname,
+      'group_supervisor_lname' => $request->group_supervisor_lname,
     ]);
   }
 
