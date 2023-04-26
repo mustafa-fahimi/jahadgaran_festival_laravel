@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SubmittedWorksRequest extends FormRequest
+class JahadiGroupSubmittedWorksRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,9 @@ class SubmittedWorksRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'group_registeration_number' => ['required', 'string'],
-            'group_supervisor_national_code' => ['required', 'string'],
+            'national_code' => ['required', 'string'],
             'verify_code' => ['required', 'string'],
             'attachment_type' => ['required', 'string'],
-            'description' => ['string'],
             'file' => ['required', 'file'],
         ];
     }

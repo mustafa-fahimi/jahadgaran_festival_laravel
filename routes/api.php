@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\GroupSubmittedWorkController;
+use App\Http\Controllers\SubmittedWorksController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +21,15 @@ Route::get('/registerGroup', [RegisterController::class, 'registerGroup']);
 
 Route::get('/atlasCode', [RegisterController::class, 'getAtlasCode']);
 
-Route::post('/submittedWork', [GroupSubmittedWorkController::class, 'store']);
+Route::post(
+  '/jahadiGroupSubmittedWork',
+  [SubmittedWorksController::class, 'jahadiGroupSubmittedWork'],
+);
+Route::post(
+  '/individualSubmittedWork',
+  [SubmittedWorksController::class, 'individualSubmittedWork'],
+);
+Route::post(
+  '/groupSubmittedWork',
+  [SubmittedWorksController::class, 'groupSubmittedWork'],
+);
