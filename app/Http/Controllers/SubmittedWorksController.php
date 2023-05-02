@@ -24,6 +24,15 @@ class SubmittedWorksController extends Controller
       '=',
       $request->national_code,
     )->first();
+    $submittedWorksCount = $jahadiGroup->submittedWorks()->count();
+    if ($submittedWorksCount >= 3) {
+      // Maximum submit
+      return $this->error(
+        null,
+        message: 'نمی توانید بیش از ۳ مرتبه ارسال کنید',
+        code: 403,
+      );
+    }
     if ($jahadiGroup->current_verify_code != $request->verify_code) {
       // Wrong verify code
       return $this->error(
@@ -43,7 +52,7 @@ class SubmittedWorksController extends Controller
     if ($isInsertSuccessful) {
       return $this->success(
         null,
-        message: 'اطلاعات با موفقیت ذخیره شد.'
+        message: 'اطلاعات با موفقیت ذخیره شد'
       );
     } else {
       return $this->error(
@@ -63,6 +72,15 @@ class SubmittedWorksController extends Controller
       '=',
       $request->national_code,
     )->first();
+    $submittedWorksCount = $individual->submittedWorks()->count();
+    if ($submittedWorksCount >= 3) {
+      // Maximum submit
+      return $this->error(
+        null,
+        message: 'نمی توانید بیش از ۳ مرتبه ارسال کنید',
+        code: 403,
+      );
+    }
     if ($individual->current_verify_code != $request->verify_code) {
       // Wrong verify code
       return $this->error(
@@ -103,6 +121,15 @@ class SubmittedWorksController extends Controller
       '=',
       $request->group_supervisor_national_code,
     )->first();
+    $submittedWorksCount = $group->submittedWorks()->count();
+    if ($submittedWorksCount >= 3) {
+      // Maximum submit
+      return $this->error(
+        null,
+        message: 'نمی توانید بیش از ۳ مرتبه ارسال کنید',
+        code: 403,
+      );
+    }
     if ($group->current_verify_code != $request->verify_code) {
       // Wrong verify code
       return $this->error(
