@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\SubmittedWorksController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,3 +34,5 @@ Route::post(
   '/groupSubmittedWork',
   [SubmittedWorksController::class, 'groupSubmittedWork'],
 );
+
+Route::get('/requests-count', [Controller::class, 'countRequests']);
