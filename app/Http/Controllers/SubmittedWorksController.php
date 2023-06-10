@@ -42,7 +42,7 @@ class SubmittedWorksController extends Controller
 
     $storedFileName = $this->storeFileAndReturnName($request->file('file'));
     $isInsertSuccessful = SubmittedWorks::create([
-      'jahadi_group_id' => $jahadiGroup->id,
+      'jahadi_groups_id' => $jahadiGroup->id,
       'attachment_type' => $request->attachment_type,
       'description' => $request->description,
       'file_path' => $storedFileName,
@@ -91,7 +91,7 @@ class SubmittedWorksController extends Controller
     $this->_updateIndividual($individual, $request);
     $storedFileName = $this->storeFileAndReturnName($request->file('file'));
     $isInsertSuccessful = SubmittedWorks::create([
-      'individual_id' => $individual->id,
+      'individuals_id' => $individual->id,
       'attachment_type' => $request->attachment_type,
       'description' => $request->description,
       'file_path' => $storedFileName,
@@ -140,7 +140,7 @@ class SubmittedWorksController extends Controller
     $this->_updateGroup($group, $request);
     $storedFileName = $this->storeFileAndReturnName($request->file('file'));
     $isInsertSuccessful = SubmittedWorks::create([
-      'group_id' => $group->id,
+      'groups_id' => $group->id,
       'attachment_type' => $request->attachment_type,
       'description' => $request->description,
       'file_path' => $storedFileName,
