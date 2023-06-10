@@ -9,33 +9,31 @@ class SubmittedWorks extends Model
 {
   use HasFactory;
 
-  protected $fillable = [
-    'jahadi_group_id',
-    'individual_id',
-    'group_id',
-    'attachment_type',
-    'description',
-    'file_path',
+  protected $guarded = [
+    'id',
+    'jahadi_groups_id',
+    'individuals_id',
+    'groups_id',
   ];
 
   protected $hidden = [
-    'jahadi_group_id',
-    'individual_id',
-    'group_id',
+    'jahadi_groups_id',
+    'individuals_id',
+    'groups_id',
   ];
 
   public function jahadiGroups()
   {
-    return $this->belongsTo(JahadiGroups::class);
+    return $this->belongsTo(JahadiGroups::class, 'jahadi_groups_id');
   }
 
   public function individuals()
   {
-    return $this->belongsTo(Individuals::class);
+    return $this->belongsTo(Individuals::class, 'individuals_id');
   }
 
   public function groups()
   {
-    return $this->belongsTo(Groups::class);
+    return $this->belongsTo(Groups::class, 'groups_id');
   }
 }

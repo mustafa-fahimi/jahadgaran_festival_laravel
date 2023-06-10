@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GetAtlasCodeRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\Groups;
 use App\Models\Individuals;
 use App\Models\JahadiGroups;
-use App\Traits\HttpResponses;
 use GuzzleHttp\Client;
 
 class RegisterController extends Controller
 {
-  use HttpResponses;
-
   public function registerJahadiGroup(RegisterRequest $request)
   {
     $request->validated($request->all());
@@ -28,10 +24,10 @@ class RegisterController extends Controller
         message: 'گروه جهادی یافت نشد',
         code: 400,
       );
-    } else if ($jahadiGroup->verify_code_count >= 3) {
+    } else if ($jahadiGroup->verify_code_count >= 12) {
       return $this->error(
         null,
-        message: 'شما بیش از سه مرتبه درخواست پیامک کد تایید کرده اید و دیگر این امکان را با این شماره همراه ندارید',
+        message: 'شما بیش از ۱۲ مرتبه درخواست پیامک کد تایید کرده اید و دیگر این امکان را با این شماره همراه ندارید',
         code: 403,
       );
     }
@@ -78,10 +74,10 @@ class RegisterController extends Controller
     )->first();
     if ($individual) {
       // User registered before
-      if ($individual->verify_code_count >= 3) {
+      if ($individual->verify_code_count >= 12) {
         return $this->error(
           null,
-          message: 'شما بیش از سه مرتبه درخواست پیامک کد تایید کرده اید و دیگر این امکان را ندارید',
+          message: 'شما بیش از ۱۲ مرتبه درخواست پیامک کد تایید کرده اید و دیگر این امکان را ندارید',
           code: 403,
         );
       }
@@ -144,10 +140,10 @@ class RegisterController extends Controller
     )->first();
     if ($group) {
       // Group registered before
-      if ($group->verify_code_count >= 3) {
+      if ($group->verify_code_count >= 12) {
         return $this->error(
           null,
-          message: 'شما بیش از سه مرتبه درخواست پیامک کد تایید کرده اید و دیگر این امکان را ندارید',
+          message: 'شما بیش از ۱۲ مرتبه درخواست پیامک کد تایید کرده اید و دیگر این امکان را ندارید',
           code: 403,
         );
       }
@@ -188,24 +184,7 @@ class RegisterController extends Controller
     }
   }
 
-  public function getAtlasCode(GetAtlasCodeRequest $request)
-  {
-    $jahadiGroup = JahadiGroups::where([
-      'group_supervisor_national_code' => $request->group_supervisor_national_code,
-    ])->first();
-    if ($jahadiGroup) {
-      return $this->success(
-        null,
-        message: 'کد اطلس گروه جهادی ' . $jahadiGroup->group_name . ' ' . $jahadiGroup->group_registeration_number . ' می باشد.',
-      );
-    } else {
-      return $this->error(
-        null,
-        message: 'گروه جهادی یافت نشد',
-        code: 400,
-      );
-    }
-  }
+  
 
   private function _sendVerifySms(string $phoneNumber, string $verifyCode)
   {

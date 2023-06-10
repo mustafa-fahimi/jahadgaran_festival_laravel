@@ -21,6 +21,8 @@ Route::get('/registerIndividual', [RegisterController::class, 'registerIndividua
 Route::get('/registerGroup', [RegisterController::class, 'registerGroup']);
 
 Route::get('/atlasCode', [RegisterController::class, 'getAtlasCode']);
+Route::get('/submittedWorks', [Controller::class, 'getSubmittedWorks']);
+Route::get('/download/{filename}', [Controller::class, 'download']);
 
 Route::post(
   '/jahadiGroupSubmittedWork',

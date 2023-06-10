@@ -9,15 +9,8 @@ class Individuals extends Model
 {
   use HasFactory;
 
-  protected $fillable = [
-    'fname',
-    'lname',
-    'city',
-    'national_code',
-    'phone_number',
-    'current_verify_code',
-    'verify_code_count',
-    'last_ip',
+  protected $guarded = [
+    'id',
   ];
 
   protected $hidden = [
@@ -28,6 +21,6 @@ class Individuals extends Model
 
   public function submittedWorks()
   {
-    return $this->hasMany(SubmittedWork::class);
+    return $this->hasMany(SubmittedWorks::class);
   }
 }

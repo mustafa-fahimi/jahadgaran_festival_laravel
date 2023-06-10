@@ -13,8 +13,6 @@ use App\Models\SubmittedWorks;
 
 class SubmittedWorksController extends Controller
 {
-  use HttpResponses;
-
   public function jahadiGroupSubmittedWork(
     JahadiGroupSubmittedWorksRequest $request,
   ) {
@@ -25,11 +23,11 @@ class SubmittedWorksController extends Controller
       $request->national_code,
     )->first();
     $submittedWorksCount = $jahadiGroup->submittedWorks()->count();
-    if ($submittedWorksCount >= 3) {
+    if ($submittedWorksCount >= 8) {
       // Maximum submit
       return $this->error(
         null,
-        message: 'نمی توانید بیش از ۳ مرتبه ارسال کنید',
+        message: 'نمی توانید بیش از ۸ مرتبه ارسال کنید',
         code: 403,
       );
     }
@@ -73,11 +71,11 @@ class SubmittedWorksController extends Controller
       $request->national_code,
     )->first();
     $submittedWorksCount = $individual->submittedWorks()->count();
-    if ($submittedWorksCount >= 3) {
+    if ($submittedWorksCount >= 8) {
       // Maximum submit
       return $this->error(
         null,
-        message: 'نمی توانید بیش از ۳ مرتبه ارسال کنید',
+        message: 'نمی توانید بیش از ۸ مرتبه ارسال کنید',
         code: 403,
       );
     }
@@ -122,11 +120,11 @@ class SubmittedWorksController extends Controller
       $request->group_supervisor_national_code,
     )->first();
     $submittedWorksCount = $group->submittedWorks()->count();
-    if ($submittedWorksCount >= 3) {
+    if ($submittedWorksCount >= 8) {
       // Maximum submit
       return $this->error(
         null,
-        message: 'نمی توانید بیش از ۳ مرتبه ارسال کنید',
+        message: 'نمی توانید بیش از ۸ مرتبه ارسال کنید',
         code: 403,
       );
     }
