@@ -11,28 +11,30 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('submitted_works', function (Blueprint $table) {
-      $table->id();
-      $table->unsignedBigInteger('jahadi_groups_id')->nullable();
-      $table->unsignedBigInteger('individuals_id')->nullable();
-      $table->unsignedBigInteger('groups_id')->nullable();
-      $table->string('attachment_type');
-      $table->string('description')->nullable();
-      $table->string('file_path');
-      $table->foreign('jahadi_groups_id')
-        ->references('id')
-        ->on('jahadi_groups')
-        ->cascadeOnDelete();
-      $table->foreign('individuals_id')
-        ->references('id')
-        ->on('individuals')
-        ->cascadeOnDelete();
-      $table->foreign('groups_id')
-        ->references('id')
-        ->on('groups')
-        ->cascadeOnDelete();
-      $table->timestamps();
-    });
+    if (!Schema::hasTable('submitted_works')) {
+      Schema::create('submitted_works', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('jahadi_groups_id')->nullable();
+        $table->unsignedBigInteger('individuals_id')->nullable();
+        $table->unsignedBigInteger('groups_id')->nullable();
+        $table->string('attachment_type');
+        $table->string('description')->nullable();
+        $table->string('file_path');
+        $table->foreign('jahadi_groups_id')
+          ->references('id')
+          ->on('jahadi_groups')
+          ->cascadeOnDelete();
+        $table->foreign('individuals_id')
+          ->references('id')
+          ->on('individuals')
+          ->cascadeOnDelete();
+        $table->foreign('groups_id')
+          ->references('id')
+          ->on('groups')
+          ->cascadeOnDelete();
+        $table->timestamps();
+      });
+    }
   }
 
   /**

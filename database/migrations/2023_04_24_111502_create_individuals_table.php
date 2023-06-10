@@ -11,18 +11,20 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('individuals', function (Blueprint $table) {
-      $table->id()->autoIncrement();
-      $table->string('fname');
-      $table->string('lname');
-      $table->string('city');
-      $table->string('national_code');
-      $table->string('phone_number');
-      $table->string('current_verify_code')->nullable();
-      $table->integer('verify_code_count')->default(0);
-      $table->string('last_ip')->nullable();
-      $table->timestamps();
-    });
+    if (!Schema::hasTable('individuals')) {
+      Schema::create('individuals', function (Blueprint $table) {
+        $table->id()->autoIncrement();
+        $table->string('fname');
+        $table->string('lname');
+        $table->string('city');
+        $table->string('national_code');
+        $table->string('phone_number');
+        $table->string('current_verify_code')->nullable();
+        $table->integer('verify_code_count')->default(0);
+        $table->string('last_ip')->nullable();
+        $table->timestamps();
+      });
+    }
   }
 
   /**

@@ -11,38 +11,40 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('jahadi_groups', function (Blueprint $table) {
-      $table->id()->autoIncrement();
-      $table->string('group_name');
-      $table->string('group_registeration_number');
-      $table->string('group_register_date');
-      $table->string('group_nature');
-      $table->string('subset_nature');
-      $table->string('group_state');
-      $table->string('group_city');
-      $table->string('group_activity_state');
-      $table->string('group_activity_city');
-      $table->integer('group_established_year');
-      $table->string('group_landline_number');
-      $table->string('group_supervisor_fullname');
-      $table->string('group_supervisor_phone');
-      $table->string('group_supervisor_national_code');
-      $table->string('group_supervisor_birth_date');
-      $table->string('group_supervisor_birth_certificate_number');
-      $table->string('group_supervisor_father_name');
-      $table->integer('group_start_activity_year');
-      $table->boolean('is_agriculture');
-      $table->boolean('is_cultural');
-      $table->boolean('is_educational');
-      $table->boolean('is_healthcare');
-      $table->boolean('is_economic');
-      $table->boolean('is_construction');
-      $table->string('phone_number')->nullable();
-      $table->string('current_verify_code')->nullable();
-      $table->integer('verify_code_count')->default(0);
-      $table->string('last_ip')->nullable();
-      $table->timestamps();
-    });
+    if (!Schema::hasTable('jahadi_groups')) {
+      Schema::create('jahadi_groups', function (Blueprint $table) {
+        $table->id()->autoIncrement();
+        $table->string('group_name');
+        $table->string('group_registeration_number');
+        $table->string('group_register_date');
+        $table->string('group_nature');
+        $table->string('subset_nature');
+        $table->string('group_state');
+        $table->string('group_city');
+        $table->string('group_activity_state');
+        $table->string('group_activity_city');
+        $table->integer('group_established_year');
+        $table->string('group_landline_number');
+        $table->string('group_supervisor_fullname');
+        $table->string('group_supervisor_phone');
+        $table->string('group_supervisor_national_code');
+        $table->string('group_supervisor_birth_date');
+        $table->string('group_supervisor_birth_certificate_number');
+        $table->string('group_supervisor_father_name');
+        $table->integer('group_start_activity_year');
+        $table->boolean('is_agriculture');
+        $table->boolean('is_cultural');
+        $table->boolean('is_educational');
+        $table->boolean('is_healthcare');
+        $table->boolean('is_economic');
+        $table->boolean('is_construction');
+        $table->string('phone_number')->nullable();
+        $table->string('current_verify_code')->nullable();
+        $table->integer('verify_code_count')->default(0);
+        $table->string('last_ip')->nullable();
+        $table->timestamps();
+      });
+    }
   }
 
   /**

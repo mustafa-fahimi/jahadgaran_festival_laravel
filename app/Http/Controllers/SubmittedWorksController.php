@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GroupSubmittedWorksRequest;
 use App\Http\Requests\IndividualSubmittedWorksRequest;
 use App\Models\Individuals;
-use App\Traits\HttpResponses;
 use App\Http\Requests\JahadiGroupSubmittedWorksRequest;
 use App\Models\Groups;
 use App\Models\JahadiGroups;
