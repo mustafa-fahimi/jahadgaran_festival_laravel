@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RefereeOtpRequest;
 use App\Models\Referees;
+use function sendVerifySms;
 
 class RefereeLoginController extends Controller
 {
@@ -15,6 +16,13 @@ class RefereeLoginController extends Controller
       '=',
       $request->phone_number,
     )->first();
+    if (!$referees) {
+      return $this->error(
+        null,
+        message: 'این شماره تلفن به عنوان داور ثبت نشده است',
+        code: 403,
+      );
+    }
     $verifyCode = strval(rand(11111, 99999));
     $sendSmsResult = sendVerifySms($request->phone_number, $verifyCode);
     if ($sendSmsResult->getStatusCode() == 200) {

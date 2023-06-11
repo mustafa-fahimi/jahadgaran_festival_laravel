@@ -8,7 +8,6 @@ use App\Models\Individuals;
 use App\Models\JahadiGroups;
 use function sendVerifySms;
 
-
 class LoginController extends Controller
 {
   public function registerJahadiGroup(LoginRequest $request)
