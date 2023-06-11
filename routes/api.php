@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\SubmittedWorksController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\CoreController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,9 +20,9 @@ Route::get('/registerJahadiGroup', [LoginController::class, 'registerJahadiGroup
 Route::get('/registerIndividual', [LoginController::class, 'registerIndividual']);
 Route::get('/registerGroup', [LoginController::class, 'registerGroup']);
 
-Route::get('/atlasCode', [Controller::class, 'getAtlasCode']);
-Route::get('/submittedWorks', [Controller::class, 'getSubmittedWorks']);
-Route::get('/download/{filename}', [Controller::class, 'download']);
+Route::get('/atlasCode', [CoreController::class, 'getAtlasCode']);
+Route::get('/submittedWorks', [CoreController::class, 'getSubmittedWorks']);
+Route::get('/download/{filename}', [CoreController::class, 'download']);
 
 Route::post(
   '/jahadiGroupSubmittedWork',
@@ -36,5 +36,3 @@ Route::post(
   '/groupSubmittedWork',
   [SubmittedWorksController::class, 'groupSubmittedWork'],
 );
-
-Route::get('/requests-count', [Controller::class, 'countRequests']);

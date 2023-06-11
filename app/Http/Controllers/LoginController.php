@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\Groups;
 use App\Models\Individuals;
 use App\Models\JahadiGroups;
@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
 
 class LoginController extends Controller
 {
-  public function registerJahadiGroup(RegisterRequest $request)
+  public function registerJahadiGroup(LoginRequest $request)
   {
     $request->validated($request->all());
     $jahadiGroup = JahadiGroups::where(
@@ -52,7 +52,7 @@ class LoginController extends Controller
     }
   }
 
-  public function registerIndividual(RegisterRequest $request)
+  public function registerIndividual(LoginRequest $request)
   {
     $request->validated($request->all());
     $group = Groups::where(
@@ -118,13 +118,14 @@ class LoginController extends Controller
     }
   }
 
-  public function registerGroup(RegisterRequest $request)
+  public function registerGroup(LoginRequest $request)
   {
     $request->validated($request->all());
     $individual = Individuals::where(
       'national_code',
       '=',
-      $request->national_code,''
+      $request->national_code,
+      ''
     )->first();
     if ($individual) {
       return $this->error(
@@ -184,8 +185,6 @@ class LoginController extends Controller
     }
   }
 
-  
-
   private function _sendVerifySms(string $phoneNumber, string $verifyCode)
   {
     $client = new Client();
@@ -216,7 +215,7 @@ class LoginController extends Controller
 
   private function _updateJahadiGroup(
     JahadiGroups $jahadiGroup,
-    RegisterRequest $request,
+    LoginRequest $request,
     string $verifyCode,
   ) {
     return $jahadiGroup->update([
@@ -229,7 +228,7 @@ class LoginController extends Controller
   }
 
   private function _createIndividual(
-    RegisterRequest $request,
+    LoginRequest $request,
     string $verifyCode,
   ) {
     return Individuals::create([
@@ -246,7 +245,7 @@ class LoginController extends Controller
 
   private function _updateIndividual(
     Individuals $individual,
-    RegisterRequest $request,
+    LoginRequest $request,
     string $verifyCode,
   ) {
     return $individual->update([
@@ -259,7 +258,7 @@ class LoginController extends Controller
   }
 
   private function _createGroup(
-    RegisterRequest $request,
+    LoginRequest $request,
     string $verifyCode,
   ) {
     return Groups::create([
@@ -278,7 +277,7 @@ class LoginController extends Controller
 
   private function _updateGroup(
     Groups $group,
-    RegisterRequest $request,
+    LoginRequest $request,
     string $verifyCode,
   ) {
     return $group->update([
