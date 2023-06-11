@@ -39,4 +39,9 @@ class SubmittedWorks extends Model
   {
     return $this->belongsTo(Groups::class, 'groups_id');
   }
+
+  public function scores()
+  {
+    return $this->hasMany(Scores::class);
+  }
 }
