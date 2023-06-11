@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\SubmittedWorksController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/registerJahadiGroup', [RegisterController::class, 'registerJahadiGroup']);
-Route::get('/registerIndividual', [RegisterController::class, 'registerIndividual']);
-Route::get('/registerGroup', [RegisterController::class, 'registerGroup']);
+Route::get('/registerJahadiGroup', [LoginController::class, 'registerJahadiGroup']);
+Route::get('/registerIndividual', [LoginController::class, 'registerIndividual']);
+Route::get('/registerGroup', [LoginController::class, 'registerGroup']);
 
-Route::get('/atlasCode', [RegisterController::class, 'getAtlasCode']);
+Route::get('/atlasCode', [Controller::class, 'getAtlasCode']);
 Route::get('/submittedWorks', [Controller::class, 'getSubmittedWorks']);
 Route::get('/download/{filename}', [Controller::class, 'download']);
 

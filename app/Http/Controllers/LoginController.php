@@ -8,7 +8,7 @@ use App\Models\Individuals;
 use App\Models\JahadiGroups;
 use GuzzleHttp\Client;
 
-class RegisterController extends Controller
+class LoginController extends Controller
 {
   public function registerJahadiGroup(RegisterRequest $request)
   {
