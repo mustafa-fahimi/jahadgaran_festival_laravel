@@ -6,7 +6,8 @@ use App\Http\Requests\LoginRequest;
 use App\Models\Groups;
 use App\Models\Individuals;
 use App\Models\JahadiGroups;
-use GuzzleHttp\Client;
+use function sendVerifySms;
+
 
 class LoginController extends Controller
 {
@@ -32,10 +33,7 @@ class LoginController extends Controller
       );
     }
     $verifyCode = strval(rand(11111, 99999));
-    $sendSmsResult = $this->_sendVerifySms(
-      $request->phone_number,
-      $verifyCode,
-    );
+    $sendSmsResult = sendVerifySms($request->phone_number, $verifyCode);
     if ($sendSmsResult->getStatusCode() == 200) {
       $this->_updateJahadiGroup($jahadiGroup, $request, $verifyCode);
       return $this->success(
@@ -82,7 +80,7 @@ class LoginController extends Controller
         );
       }
       $verifyCode = strval(rand(11111, 99999));
-      $sendSmsResult = $this->_sendVerifySms($request->phone_number, $verifyCode);
+      $sendSmsResult = sendVerifySms($request->phone_number, $verifyCode);
       if ($sendSmsResult->getStatusCode() == 200) {
         $this->_updateIndividual($individual, $request, $verifyCode);
         return $this->success(
@@ -100,7 +98,7 @@ class LoginController extends Controller
     } else {
       // User registered for the first time
       $verifyCode = strval(rand(11111, 99999));
-      $sendSmsResult = $this->_sendVerifySms($request->phone_number, $verifyCode);
+      $sendSmsResult = sendVerifySms($request->phone_number, $verifyCode);
       if ($sendSmsResult->getStatusCode() == 200) {
         $this->_createIndividual($request, $verifyCode);
         return $this->success(
@@ -149,7 +147,7 @@ class LoginController extends Controller
         );
       }
       $verifyCode = strval(rand(11111, 99999));
-      $sendSmsResult = $this->_sendVerifySms($request->phone_number, $verifyCode);
+      $sendSmsResult = sendVerifySms($request->phone_number, $verifyCode);
       if ($sendSmsResult->getStatusCode() == 200) {
         $this->_updateGroup($group, $request, $verifyCode);
         return $this->success(
@@ -167,7 +165,7 @@ class LoginController extends Controller
     } else {
       // User registered for the first time
       $verifyCode = strval(rand(11111, 99999));
-      $sendSmsResult = $this->_sendVerifySms($request->phone_number, $verifyCode);
+      $sendSmsResult = sendVerifySms($request->phone_number, $verifyCode);
       if ($sendSmsResult->getStatusCode() == 200) {
         $this->_createGroup($request, $verifyCode);
         return $this->success(
@@ -185,33 +183,7 @@ class LoginController extends Controller
     }
   }
 
-  private function _sendVerifySms(string $phoneNumber, string $verifyCode)
-  {
-    $client = new Client();
 
-    $url = 'https://api.sms.ir/v1/send/verify';
-    $headers = [
-      'Accept' => 'application/json',
-      'X-API-KEY' => 'kbXRwwN1VYa7bf9BHGZGp3n1IfWHAOWZ4hcirmQFedlbmTzZNHIrTt1QasvGvioC',
-    ];
-    $body = [
-      'mobile' => $phoneNumber,
-      'templateId' => 254876,
-      "parameters" => [
-        [
-          "name" => "Code",
-          "value" => $verifyCode,
-        ]
-      ]
-    ];
-
-    $sendSmsResponse = $client->request('POST', $url, [
-      'headers' => $headers,
-      'json' => $body,
-    ]);
-
-    return $sendSmsResponse;
-  }
 
   private function _updateJahadiGroup(
     JahadiGroups $jahadiGroup,

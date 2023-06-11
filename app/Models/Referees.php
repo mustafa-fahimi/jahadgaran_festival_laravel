@@ -12,6 +12,15 @@ class Referees extends Model
 
   protected $dates = ['deleted_at'];
 
+  protected $guarded = [
+    'id',
+  ];
+
+  protected $hidden = [
+    'current_verify_code',
+    'deleted_at',
+  ];
+
   public function scores()
   {
     return $this->hasMany(Score::class);

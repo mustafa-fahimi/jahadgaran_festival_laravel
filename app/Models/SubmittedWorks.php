@@ -14,15 +14,13 @@ class SubmittedWorks extends Model
 
   protected $guarded = [
     'id',
-    'jahadi_groups_id',
-    'individuals_id',
-    'groups_id',
   ];
 
   protected $hidden = [
     'jahadi_groups_id',
     'individuals_id',
     'groups_id',
+    'deleted_at',
   ];
 
   public function jahadiGroups()

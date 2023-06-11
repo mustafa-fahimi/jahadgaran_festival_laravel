@@ -11,13 +11,14 @@ return new class extends Migration
    */
   public function up(): void
   {
-    if (!Schema::hasTable('submitted_works')) {
+    if (!Schema::hasTable('referees')) {
       Schema::create('referees', function (Blueprint $table) {
         $table->id();
         $table->string('fname')->nullable(false)->default('داور');
         $table->string('lname')->nullable(false)->default('جشنواره');
         $table->string('phone')->nullable(false);
         $table->string('national_code')->nullable(false)->default('0');
+        $table->string('current_verify_code')->nullable();
         $table->timestamp('deleted_at')->nullable();
         $table->timestamps();
       });

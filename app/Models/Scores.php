@@ -12,6 +12,16 @@ class Scores extends Model
 
   protected $dates = ['deleted_at'];
 
+  protected $guarded = [
+    'id',
+  ];
+
+  protected $hidden = [
+    'referees_id',
+    'submitted_works_id',
+    'deleted_at',
+  ];
+
   public function referee()
   {
     return $this->belongsTo(Referee::class);
