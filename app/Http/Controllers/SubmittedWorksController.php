@@ -87,7 +87,11 @@ class SubmittedWorksController extends Controller
       );
     }
 
-    $this->_updateIndividual($individual, $request);
+    $individual->update([
+      'fname' => $request->fname,
+      'lname' => $request->lname,
+      'city' => $request->city,
+    ]);
     $storedFileName = $this->storeFileAndReturnName($request->file('file'));
     $isInsertSuccessful = SubmittedWorks::create([
       'individuals_id' => $individual->id,
@@ -136,7 +140,15 @@ class SubmittedWorksController extends Controller
       );
     }
 
-    $this->_updateGroup($group, $request);
+    $group->update([
+      'group_name' => $request->group_name,
+      'established_year' => $request->established_year,
+      'group_license_number' => $request->group_license_number,
+      'group_institution' => $request->group_institution,
+      'group_city' => $request->group_city,
+      'group_supervisor_fname' => $request->group_supervisor_fname,
+      'group_supervisor_lname' => $request->group_supervisor_lname,
+    ]);
     $storedFileName = $this->storeFileAndReturnName($request->file('file'));
     $isInsertSuccessful = SubmittedWorks::create([
       'groups_id' => $group->id,
@@ -158,32 +170,6 @@ class SubmittedWorksController extends Controller
     }
   }
 
-  private function _updateIndividual(
-    Individuals $individual,
-    IndividualSubmittedWorksRequest $request,
-  ) {
-    return $individual->update([
-      'fname' => $request->fname,
-      'lname' => $request->lname,
-      'city' => $request->city,
-    ]);
-  }
-
-  private function _updateGroup(
-    Groups $group,
-    GroupSubmittedWorksRequest $request,
-  ) {
-    return $group->update([
-      'group_name' => $request->group_name,
-      'established_year' => $request->established_year,
-      'group_license_number' => $request->group_license_number,
-      'group_institution' => $request->group_institution,
-      'group_city' => $request->group_city,
-      'group_supervisor_fname' => $request->group_supervisor_fname,
-      'group_supervisor_lname' => $request->group_supervisor_lname,
-    ]);
-  }
-
   private function storeFileAndReturnName($file)
   {
     $originalName = $file->getClientOriginalName();
@@ -191,5 +177,23 @@ class SubmittedWorksController extends Controller
     $newName = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $extension;
     $file->storeAs('uploads', $newName);
     return $newName;
+  }
+
+  public function deleteSubmittedWork($id)
+  {
+    $submittedWork = SubmittedWorks::find($id);
+    if ($submittedWork) {
+      $submittedWork->delete();
+      return $this->success(
+        null,
+        message: 'اطلاعات با موفقیت حذف شد.'
+      );
+    } else {
+      return $this->error(
+        null,
+        message: 'خطا در سرور! مجددا امتحان نمایید',
+        code: 422,
+      );
+    }
   }
 }

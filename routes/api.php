@@ -18,26 +18,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/registerJahadiGroup', [LoginController::class, 'registerJahadiGroup']);
-Route::get('/registerIndividual', [LoginController::class, 'registerIndividual']);
-Route::get('/registerGroup', [LoginController::class, 'registerGroup']);
-
 Route::get('/atlasCode', [CoreController::class, 'getAtlasCode']);
 Route::get('/submittedWorks', [CoreController::class, 'getSubmittedWorks']);
 Route::get('/download/{filename}', [CoreController::class, 'download']);
 
-Route::post(
-  '/jahadiGroupSubmittedWork',
-  [SubmittedWorksController::class, 'jahadiGroupSubmittedWork'],
-);
-Route::post(
-  '/individualSubmittedWork',
-  [SubmittedWorksController::class, 'individualSubmittedWork'],
-);
-Route::post(
-  '/groupSubmittedWork',
-  [SubmittedWorksController::class, 'groupSubmittedWork'],
-);
+Route::group(([]), function () {
+  Route::get('/registerJahadiGroup', [LoginController::class, 'registerJahadiGroup']);
+  Route::get('/registerIndividual', [LoginController::class, 'registerIndividual']);
+  Route::get('/registerGroup', [LoginController::class, 'registerGroup']);
+});
+
+Route::group(([]), function () {
+  Route::post(
+    '/jahadiGroupSubmittedWork',
+    [SubmittedWorksController::class, 'jahadiGroupSubmittedWork'],
+  );
+  Route::post(
+    '/individualSubmittedWork',
+    [SubmittedWorksController::class, 'individualSubmittedWork'],
+  );
+  Route::post(
+    '/groupSubmittedWork',
+    [SubmittedWorksController::class, 'groupSubmittedWork'],
+  );
+  Route::delete(
+    '/submittedWork/{id}',
+    [SubmittedWorksController::class, 'deleteSubmittedWork'],
+  );
+});
 
 Route::group((['prefix' => 'referee']), function () {
   Route::post(
