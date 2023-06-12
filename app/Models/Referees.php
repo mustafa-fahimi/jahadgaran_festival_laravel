@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Scores;
 
 class Referees extends Model
 {
@@ -23,6 +24,6 @@ class Referees extends Model
 
   public function scores()
   {
-    return $this->hasMany(Score::class);
+    return $this->hasMany(Scores::class);
   }
 }

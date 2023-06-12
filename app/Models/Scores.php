@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\SubmittedWorks;
+use App\Models\Referees;
 
 class Scores extends Model
 {
@@ -24,11 +26,11 @@ class Scores extends Model
 
   public function referee()
   {
-    return $this->belongsTo(Referee::class);
+    return $this->belongsTo(Referees::class);
   }
 
   public function submittedWork()
   {
-    return $this->belongsTo(SubmittedWork::class);
+    return $this->belongsTo(SubmittedWorks::class);
   }
 }

@@ -19,6 +19,7 @@ return new class extends Migration
         $table->string('phone')->nullable(false);
         $table->string('national_code')->nullable(false)->default('0');
         $table->string('current_verify_code')->nullable();
+        $table->text('token')->nullable();
         $table->timestamp('deleted_at')->nullable();
         $table->timestamps();
       });
