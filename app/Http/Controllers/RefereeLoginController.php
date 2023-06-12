@@ -21,7 +21,7 @@ class RefereeLoginController extends Controller
       return $this->error(
         null,
         message: 'این شماره تلفن به عنوان داور ثبت نشده است',
-        code: 403,
+        code: 401,
       );
     }
     $verifyCode = strval(rand(11111, 99999));

@@ -24,12 +24,12 @@ class Scores extends Model
     'deleted_at',
   ];
 
-  public function referee()
+  public function referees()
   {
     return $this->belongsTo(Referees::class);
   }
 
-  public function submittedWork()
+  public function submittedWorks()
   {
     return $this->belongsTo(SubmittedWorks::class);
   }

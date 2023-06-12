@@ -17,6 +17,7 @@ return new class extends Migration
         $table->string('fname')->nullable(false)->default('داور');
         $table->string('lname')->nullable(false)->default('جشنواره');
         $table->string('phone')->nullable(false);
+        $table->string('role')->nullable(false);
         $table->string('national_code')->nullable(false)->default('0');
         $table->string('current_verify_code')->nullable();
         $table->text('token')->nullable();

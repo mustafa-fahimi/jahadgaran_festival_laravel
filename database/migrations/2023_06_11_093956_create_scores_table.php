@@ -17,7 +17,7 @@ return new class extends Migration
         $table->unsignedBigInteger('referees_id');
         $table->unsignedBigInteger('submitted_works_id');
         $table->integer('score');
-        $table->text('description');
+        $table->text('description')->nullable();
         $table->timestamp('deleted_at')->nullable();
         $table->timestamps();
         $table->foreign('referees_id')

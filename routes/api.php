@@ -4,6 +4,7 @@ use App\Http\Controllers\SubmittedWorksController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CoreController;
 use App\Http\Controllers\RefereeLoginController;
+use App\Http\Controllers\RefereeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,5 +47,9 @@ Route::group((['prefix' => 'referee']), function () {
   Route::post(
     '/login',
     [RefereeLoginController::class, 'login'],
+  );
+  Route::get(
+    '/submittedWorks',
+    [RefereeController::class, 'submittedWorks'],
   );
 });
