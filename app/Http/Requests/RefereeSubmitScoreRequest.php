@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 use App\Traits\HttpResponses;
 
-class RefereeRequest extends FormRequest
+class RefereeSubmitScoreRequest extends FormRequest
 {
   use HttpResponses;
   /**
@@ -39,7 +39,9 @@ class RefereeRequest extends FormRequest
   public function rules(): array
   {
     return [
-      'token' => ['required', 'string'],
+      'submitted_works_id' => ['required', 'integer'],
+      'score' => ['required', 'integer', 'min:0', 'max:100'],
+      'description' => ['required', 'string'],
     ];
   }
 }

@@ -52,4 +52,8 @@ Route::group((['prefix' => 'referee']), function () {
     '/submittedWorks',
     [RefereeController::class, 'submittedWorks'],
   );
+  Route::post(
+    '/submitScore',
+    [RefereeController::class, 'submitScore'],
+  );
 });
